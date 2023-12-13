@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+//SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.19;
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -118,5 +118,8 @@ contract NftMarketplace is ERC721, AccessControl, INftMarketplace {
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
+    // function _contextSuffixLength() internal view virtual override(OwnableUpgradeable, UUPSUpgradeable) returns (uint256) {
+    //     return UUPSUpgradeable._contextSuffixLength() + OwnableUpgradeable._contextSuffixLength();
+    // }
 
 }

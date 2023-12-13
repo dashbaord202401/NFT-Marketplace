@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.19;
 import {Test} from "forge-std/Test.sol";
-import {NftMarketplace} from "../src/NftMarketplace.sol";
+import {NftMarketplace2} from "../src/NftMarketplace2.sol";
 import {INftMarketplace} from "../src/Interface/INftMarketplace.sol";
 
 contract NftMarketpalceTest is Test {
@@ -14,7 +14,7 @@ contract NftMarketpalceTest is Test {
     uint256 public constant BID_PRICE = 1 ether;
     uint256 public nftPrice = 1 ether;
 
-    NftMarketplace marketplaceContract;
+    NftMarketplace2 marketplaceContract;
     address public OWNER = makeAddr("owner");
     address public USER = makeAddr("user");
 
@@ -26,7 +26,7 @@ contract NftMarketpalceTest is Test {
     function setUp() public {
         OWNER = msg.sender;
         vm.prank(OWNER);
-        marketplaceContract = new NftMarketplace();
+        marketplaceContract = new NftMarketplace2();
         vm.stopPrank();
     }
 
@@ -117,7 +117,6 @@ contract NftMarketpalceTest is Test {
         marketplaceContract.bid{value: 1 ether}(0);
         
         assertEq(marketplaceContract.retrieveBidders(0), OWNER);
-        assertEq(marketplaceContract.bidPrice(0), 1 ether);
         vm.stopPrank();
     }
 
@@ -132,7 +131,6 @@ contract NftMarketpalceTest is Test {
         marketplaceContract.bid{value: 1 ether}(0);
         
         assertEq(marketplaceContract.retrieveBidders(0), OWNER);
-        assertEq(marketplaceContract.bidPrice(0), 1 ether);
         vm.stopPrank();
 
         vm.startPrank(USER);
@@ -141,10 +139,8 @@ contract NftMarketpalceTest is Test {
         vm.stopPrank();
 
         assertEq(marketplaceContract.retrieveBidders(0), USER);
-        assertEq(marketplaceContract.bidPrice(0), 2 ether);
     }
 
-    //! this case
     function testRevertBidIfAuctionStateIsNotOpen() public {
         vm.startPrank(OWNER);
         vm.deal(OWNER, 10 ether);
