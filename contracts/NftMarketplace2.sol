@@ -107,6 +107,10 @@ contract NftMarketplace2 is INftMarketplace, Initializable,ERC721Upgradeable, Ac
         return (ownerOf(_tokenId));
     }
 
+    function retrieveFixedPriceNFTDataUsingStruct(uint256 _tokenId) external view returns (SaleInfo memory) {
+        return (saleInfo[_tokenId]);
+    }
+
     function retrieveAuctionNFTData(uint256 _tokenId) external view returns (uint256 endTime, uint256 highestBid, address highestBidder) {
         Auction storage auction = auctions[_tokenId];
         return (auction.endTime, auction.highestBid, auction.highestBidder);
