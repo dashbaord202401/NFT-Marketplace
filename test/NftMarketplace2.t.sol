@@ -12,12 +12,13 @@ contract NftMarketpalceTest is Test {
     uint256 public constant ZERO_AUCTION_DURATION = 0;
     uint256 public constant ZERO_VALUE = 0;
     uint256 public constant BID_PRICE = 1 ether;
+    uint256 public constant USER_DEAL_BALANCE = 10 ether;
     uint256 public nftPrice = 1 ether;
 
     NftMarketplace2 marketplaceContract;
+
     address public OWNER = makeAddr("owner");
     address public USER = makeAddr("user");
-
     address public MINTER1 = makeAddr("minter1");
     address public MINTER2 = makeAddr("minter2");
 
@@ -25,7 +26,7 @@ contract NftMarketpalceTest is Test {
 
     function setUp() public {
         OWNER = msg.sender;
-        vm.prank(OWNER);
+        vm.startPrank(OWNER);
         marketplaceContract = new NftMarketplace2();
         vm.stopPrank();
     }
@@ -51,7 +52,7 @@ contract NftMarketpalceTest is Test {
 
     function testListForSale() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
 
         marketplaceContract.setApprovalForAll(OWNER, true);
@@ -61,7 +62,7 @@ contract NftMarketpalceTest is Test {
 
     function testRevertListForSaleifValueIsNotCorrect() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
         
         bytes4 selector = bytes4(keccak256("NftMarketplace__InvalidPrice()"));
@@ -73,7 +74,7 @@ contract NftMarketpalceTest is Test {
 
     function testRevertListForSaleifValueIsZero() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
         
         bytes4 selector = bytes4(keccak256("NftMarketplace__InvalidPrice()"));
@@ -85,7 +86,7 @@ contract NftMarketpalceTest is Test {
 
     function testListForAuction() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
 
         marketplaceContract.setApprovalForAll(OWNER, true);
@@ -95,7 +96,7 @@ contract NftMarketpalceTest is Test {
 
     function testRevertListForAuctionifDurationIsZero() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
         marketplaceContract.setApprovalForAll(address(this), true);
          
@@ -108,7 +109,7 @@ contract NftMarketpalceTest is Test {
 
     function testBid() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
 
         marketplaceContract.setApprovalForAll(OWNER, true);
@@ -122,7 +123,7 @@ contract NftMarketpalceTest is Test {
 
     function testMultipleBid() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
 
         marketplaceContract.setApprovalForAll(OWNER, true);
@@ -134,7 +135,7 @@ contract NftMarketpalceTest is Test {
         vm.stopPrank();
 
         vm.startPrank(USER);
-        vm.deal(USER, 10 ether);
+        vm.deal(USER, USER_DEAL_BALANCE);
         marketplaceContract.bid{value: 2 ether}(0);
         vm.stopPrank();
 
@@ -143,13 +144,13 @@ contract NftMarketpalceTest is Test {
 
     function testRevertBidIfAuctionStateIsNotOpen() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
         marketplaceContract.setApprovalForAll(OWNER, true);
         marketplaceContract.listForSale{value: LISTING_PRICE}(0, nftPrice);
         vm.stopPrank();
 
-        vm.deal(USER, 10 ether);
+        vm.deal(USER, USER_DEAL_BALANCE);
         vm.startPrank(USER);
         bytes4 selector = bytes4(keccak256("NftMarketplace__AuctionNotExist()"));
         vm.expectRevert(abi.encodeWithSelector(selector));
@@ -160,7 +161,7 @@ contract NftMarketpalceTest is Test {
 
     function testRevertBidIfAuctionTimeIsOver() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
         marketplaceContract.setApprovalForAll(OWNER, true);
         marketplaceContract.listForAuction(0, AUCITON_DURATION);
@@ -181,7 +182,7 @@ contract NftMarketpalceTest is Test {
 
     function testRevertBidIfBidPriceIsSame() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
         marketplaceContract.setApprovalForAll(OWNER, true);
         marketplaceContract.listForAuction(0, AUCITON_DURATION);
@@ -189,7 +190,7 @@ contract NftMarketpalceTest is Test {
         marketplaceContract.bid{value: BID_PRICE}(0);
         vm.stopPrank();
 
-        vm.deal(USER, 10 ether);
+        vm.deal(USER, USER_DEAL_BALANCE);
         vm.startPrank(USER);
         bytes4 selector = bytes4(keccak256("NftMarketplace__BidTooLow()"));
         vm.expectRevert(abi.encodeWithSelector(selector));
@@ -199,7 +200,7 @@ contract NftMarketpalceTest is Test {
 
     function testRevertBidIfBidPriceIsBelowTheHighestBidder() public {
         vm.startPrank(OWNER);
-        vm.deal(OWNER, 10 ether);
+        vm.deal(OWNER, USER_DEAL_BALANCE);
         marketplaceContract.mint(OWNER);
         marketplaceContract.setApprovalForAll(OWNER, true);
         marketplaceContract.listForAuction(0, AUCITON_DURATION);
@@ -207,7 +208,7 @@ contract NftMarketpalceTest is Test {
         marketplaceContract.bid{value: BID_PRICE}(0);
         vm.stopPrank();
 
-        vm.deal(USER, 10 ether);
+        vm.deal(USER, USER_DEAL_BALANCE);
         vm.startPrank(USER);
         bytes4 selector = bytes4(keccak256("NftMarketplace__BidTooLow()"));
         vm.expectRevert(abi.encodeWithSelector(selector));
