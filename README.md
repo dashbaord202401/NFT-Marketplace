@@ -73,7 +73,7 @@ There are 2 type of contracts
   3: The contract that use ERC721 and integrate in the marketplace contract. In this case,
      approval is needed.
   4: The test cases both of the smart contracts are written in Foundry.
-  5: This smart contract is deployed on Goerli testnet with      address:0xb718fb409e49781f49411715d58d85affca4307b
+  5: This smart contract is deployed on Goerli testnet with      address:0x78297fdCaE16842772034c86387522d03d2F3197
   6: This is the Proxy Contract(upgradable contract)
   7: make file is also included, through which you can perform multiple tasks with Foundry  shortcuts.
   
