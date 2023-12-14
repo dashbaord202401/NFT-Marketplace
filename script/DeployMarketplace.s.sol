@@ -10,7 +10,7 @@ contract MarketplaceScript is Script {
         
         uint privateKey = vm.envUint("PRIVATE_KEY");
         address account = vm.addr(privateKey);
-        console.log("Account: ", account);
+        console.log("Deployer Account Address: ", account);
 
         vm.startBroadcast(privateKey);
         NftMarketplace2 nftMarketplace = new NftMarketplace2();
