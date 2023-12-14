@@ -45,5 +45,4 @@ interface INftMarketplace {
     function listForSale(uint256 _tokenId, uint256 _price) external payable;
     function listForAuction(uint256 _tokenId, uint256 _duration) external;
     function bid(uint256 _tokenId) external payable;
-
 }

@@ -32,10 +32,10 @@ contract NftMarketplace2 is INftMarketplace, Initializable,ERC721Upgradeable, Ac
     }
 
     function mint(address to) external onlyMinter {
+        _mint(to, s_tokenCounter);
         unchecked {
             s_tokenCounter++;
         }
-        _mint(to, s_tokenCounter);
     }
 
     function listForSale(uint256 _tokenId, uint256 price) external payable override { 
